@@ -15,7 +15,7 @@
         <div style="user-select:none" title='点击打开附件' @click='open(attach)' :key='attach.name' class="attach" v-for='attach in body.attachment'>{{attach.name}}</div>
       </div>
       <div class="body detail-body" ref='body' v-if='isIframe'>
-        <iframe :src="htmlSrc" frameborder="0" height='100%' width='100%' ref='iframe'></iframe>
+        <webview autosize="on" minwidth="576" height="832" :src="htmlSrc" frameborder="0" ref='iframe' id='iframe'></webview>
       </div>
       <div class="body detail-body" v-html="body.bodyHtml" v-else-if='isHtml'></div>
       <div class="body detail-body" v-else>{{body.bodyText}}</div>
@@ -25,7 +25,6 @@
 <script>
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   const { shell } = require('electron')
-  const fs = require('fs')
   export default {
     created () {
       const id = this.$route.params.id
@@ -65,38 +64,18 @@
     watch: {
       emailDetail (detail) {
         const HTML = '.html'
-        const htmlSrc = `src/renderer/temp/${detail.attr.uid}.html`
         this.body = detail.body
         this.header = detail.header
         this.attr = detail.attr
         let bodyHtml = detail.body.bodyHtml
-        alert('html为：' + bodyHtml)
         // ① html字符串是一个文件路径
-        alert('fs:' + JSON.stringify(fs))
-        alert('fs.readFileSync:' + JSON.stringify(fs.readFileSync))
         if (bodyHtml.indexOf(HTML) && bodyHtml.indexOf(HTML) + HTML.length === bodyHtml.length) {
           this.isIframe = true
-          // 判断是否已经缓存，有文件就直接读取
-          fs.stat(htmlSrc, (err, stats) => {
-            alert('读取文件，有无err: ' + JSON.stringify(err, null, 2))
-            if (err) {
-              // createReadStream时异步api，需要在close时再读取
-              fs.createReadStream(bodyHtml).pipe(fs.createWriteStream(htmlSrc))
-                .on('close', () => {
-                  alert('已添加入缓存，地址为：' + htmlSrc)
-                  this.htmlSrc = htmlSrc
-                  // 加载完修改高度，在标签用@onload不触发
-                  this.$refs.iframe.onload = () => {
-                    this.iframeLoad()
-                  }
-                })
-            } else {
-              alert('已有缓存，地址为：' + htmlSrc)
-              this.htmlSrc = htmlSrc
-              this.$refs.iframe.onload = () => {
-                this.iframeLoad()
-              }
-            }
+          this.htmlSrc = bodyHtml
+          this.$nextTick(() => {
+            this.$refs.iframe.addEventListener('dom-ready', () => {
+              this.iframeLoad()
+            })
           })
         } else if (bodyHtml) {
           // ② html字符串是普通html字符串
@@ -128,16 +107,6 @@
         const location = file.location
         shell.openItem(location)
       },
-      limitWidth () {
-        // 有的邮件的html片段，宽度很大，需要限制
-        // 这里用窗口总宽度减去侧边栏宽度再减去margin等得到body宽度
-        // 当使用别的元素来确定宽度（如.content）,发现有问题，要多次触发onresize才一点一点改变宽度。
-        const body = document.getElementsByClassName('detail-body')[0]
-        const whole = document.body.clientWidth
-        const targetWidth = whole - 65 - 40 + 'px'
-        body.style.width = targetWidth
-        body.style['overflow-x'] = 'auto'
-      },
       changeLink () {
         // 针对body嵌入html代码，不是处理iframe的
         const body = document.getElementsByClassName('detail-body')[0]
@@ -149,17 +118,27 @@
           }
         })
       },
+      limitWidth () {
+        // 有的邮件的html片段，宽度很大，需要限制
+        // 这里用窗口总宽度减去侧边栏宽度再减去margin等得到body宽度
+        // 当使用别的元素来确定宽度（如.content）,发现有问题，要多次触发onresize才一点一点改变宽度。
+        const body = document.getElementsByClassName('detail-body')[0]
+        const whole = document.body.clientWidth
+        const targetWidth = whole - 65 - 40 + 'px'
+        body.style.width = targetWidth
+        body.style['overflow-x'] = 'auto'
+      },
       iframeLoad () {
-        const iframe = this.$refs.iframe
-        let height = Math.max(iframe.contentDocument.documentElement.scrollHeight, iframe.contentDocument.documentElement.offsetHeight, iframe.contentDocument.documentElement.clientHeight) + 50
-        this.$refs.body.style.height = height + 'px'
+        // const iframe = this.$refs.iframe
+        const iframe = document.getElementById('iframe')
+        // let height = Math.max(iframe.contentDocument.documentElement.scrollHeight, iframe.contentDocument.documentElement.offsetHeight, iframe.contentDocument.documentElement.clientHeight) + 50
+        // let height = Math.max(iframe.scrollHeight, iframe.offsetHeight, iframe.clientHeight) + 50
+        // this.$refs.body.style.height = height + 'px'
         // 发现文字较小，就长度放大为1.1倍
-        this.$refs.body.style.transform = 'scale3d(1, 1.1, 1)'
-        setTimeout(() => {
-          alert('iframe body高度：' + getComputedStyle(this.$refs.body)['height'])
-        })
+        // this.$refs.body.style.transform = 'scale3d(1, 1.1, 1)'
         // iframe内链接使用浏览器打开
-        iframe.contentDocument.addEventListener('click', (e) => {
+        iframe.style.height = '100%'
+        iframe.addEventListener('click', (e) => {
           if ((e.target.tagName.match(/^a$/i) && e.target.href) || (e.target.parentElement.tagName.match(/^a$/i) && e.target.parentElement.href)) {
             shell.openExternal(e.target.href || e.target.parentElement.href)
             e.preventDefault()

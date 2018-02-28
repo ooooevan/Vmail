@@ -23,3 +23,7 @@ export const SET_USER = 'SET_USER'
 export const SET_SHOW_LOGIN = 'SET_SHOW_LOGIN'
 
 export const MARK_INBOX_EMAIL = 'MARK_INBOX_EMAIL'
+
+export const SET_USER_LIST = 'SET_USER_LIST'
+
+export const SET_UNLOAD_LIST = 'SET_UNLOAD_LIST'

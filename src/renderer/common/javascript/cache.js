@@ -100,7 +100,7 @@ export function _saveDiskEmail (detail) {
   }
   db = low(new FileSync(getEmailDetailPath(email, `${_detail.attr.uid}`)))
   if (contentType.match(htmlTypeReg)) {
-    fs.writeFileSync(getEmailDetailPath(email, `${_detail.attr.uid}.html`), _detail.body.bodyHtml)
+    fs.writeFileSync(getEmailDetailPath(email, `${_detail.attr.uid}.html`), _detail.body.bodyHtml.replace(/charset=([^]+?")/, '"'))
     // 单独存了html，就不用再重复存了，bodyHtml属性存地址
     _detail = {
       ..._detail,
@@ -126,7 +126,7 @@ export function _saveDiskEmail (detail) {
   if (!contentType.match(htmlTypeReg)) {
     const html = _detail.body.bodyHtml
     if (html && html.length > 100 && (html.match(/<style/) || html.length > 1000)) {
-      fs.writeFileSync(getEmailDetailPath(email, `${_detail.attr.uid}.html`), _detail.body.bodyHtml)
+      fs.writeFileSync(getEmailDetailPath(email, `${_detail.attr.uid}.html`), _detail.body.bodyHtml.replace(/charset=([^]+?")/, '"'))
       // 单独存了html，就不用再重复存了，bodyHtml属性存地址
       _detail = {
         ..._detail,

@@ -16,8 +16,7 @@
     "pack": "npm run pack:main && npm run pack:renderer",
     "pack:main": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.main.config.js",
     "pack:renderer": "cross-env NODE_ENV=production webpack --progress --colors --config .electron-vue/webpack.renderer.config.js",
-    "postinstall": "npm run lint:fix",
-    "rebuild": "electron-rebuild -f -w fs"
+    "postinstall": "npm run lint:fix"
   },
   "build": {
     "productName": "vmail",
@@ -55,7 +54,6 @@
   },
   "dependencies": {
     "element-ui": "^2.2.0",
-    "fs": "0.0.1-security",
     "iconv-lite": "^0.4.19",
     "imap": "^0.8.19",
     "lowdb": "^1.0.0",

@@ -30,6 +30,9 @@
       if (this.user.email) {
         this.loginVisible = false
       }
+      setInterval(() => {
+        this.updateEmailList()
+      }, 60 * 1000)
     },
     watch: {
       isShowLogin (newShow) {
@@ -51,7 +54,7 @@
           this.hideLogin()
         }
       },
-      ...mapActions(['hideLogin'])
+      ...mapActions(['hideLogin', 'updateEmailList'])
     }
   }
 </script>

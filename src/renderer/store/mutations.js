@@ -8,6 +8,9 @@ const mutations = {
   [types.SET_UPDATING] (state, bool) {
     state.updating = bool
   },
+  [types.SET_USER_LIST] (state, list) {
+    state.userList = list
+  },
   [types.SET_EMAIL_DETAIL] (state, email) {
     state.emailDetail = email
   },
@@ -80,6 +83,9 @@ const mutations = {
       mail.isRead = true
     })
     _saveEmailList(state.inboxMail)
+  },
+  [types.SET_UNLOAD_LIST] (state, list) {
+    state.unLoadList = list
   }
 }
 export default mutations

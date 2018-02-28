@@ -11,7 +11,8 @@ const state = {
   groupList: _getDiskGroupList() || [],
   sendingStatus: {sending: false, err: null},
   emailDetail: {},
-  isShowLogin: false
+  isShowLogin: false,
+  unLoadList: []
 }
 
 export default state

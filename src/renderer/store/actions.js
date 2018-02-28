@@ -1,6 +1,6 @@
 import * as types from './mutations-type'
 import store from './index'
-import { _saveEmailList, _saveSentEmailList, _saveDiskEmail, _saveUser, _getDiskEmail, _getDiskMailList, _getDiskAdressList, _getDiskGroupList, _saveGroupList, _saveAddressList, _saveDraftsEmailList } from '@/common/javascript/cache'
+import { _saveEmailList, _saveSentEmailList, _saveDiskEmail, _saveUser, _getDiskEmail, _getDiskMailList, _getDiskAdressList, _getDiskGroupList, _saveGroupList, _saveAddressList, _saveDraftsEmailList, _getUserList } from '@/common/javascript/cache'
 import { _getEmailList, _getEmailDetail, _testAccount } from '@/common/javascript/getEmail'
 import { _sendEmail } from '@/common/javascript/sendEmail'
 import Friends from '@src/models/address_list'
@@ -14,6 +14,9 @@ export function updateEmailList ({commit, state}) {
   let draftResult = [].concat(state.draftMail)
   const user = state.user
   let done = 0
+  if (!user.email) {
+    return false
+  }
   _getEmailList(user, 'inbox', inboxResult[0] && inboxResult[0].id).then(res => {
     res.forEach(item => {
       let add = true
@@ -23,6 +26,8 @@ export function updateEmailList ({commit, state}) {
         }
       })
       if (add) {
+        // 新的邮件，自动去获取并保存
+        store.dispatch('getEmailDetail', {id: item.id, type: 'inbox'})
         inboxResult = [item].concat(inboxResult)
       }
     })
@@ -32,7 +37,7 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert(err)
+    alert(JSON.stringify(err))
   })
   _getEmailList(user, 'sent').then(res => {
     res.forEach(item => {
@@ -43,6 +48,7 @@ export function updateEmailList ({commit, state}) {
         }
       })
       if (add) {
+        store.dispatch('getEmailDetail', {id: item.id, type: 'sent'})
         sentResult = [item].concat(sentResult)
       }
     })
@@ -52,7 +58,7 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert(err)
+    alert(JSON.stringify(err))
   })
   _getEmailList(user, 'draft').then(res => {
     res.forEach(item => {
@@ -63,6 +69,7 @@ export function updateEmailList ({commit, state}) {
         }
       })
       if (add) {
+        store.dispatch('getEmailDetail', {id: item.id, type: 'draft'})
         draftResult = [item].concat(draftResult)
       }
     })
@@ -72,7 +79,7 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert(err)
+    alert(JSON.stringify(err))
   })
 }
 
@@ -194,6 +201,7 @@ export function changeUser ({commit, state}, user) {
     commit(types.SET_DRAFTS_MAIL_LIST, _getDiskMailList('draft'))
     commit(types.SET_ADDRESS_LIST, _getDiskAdressList())
     commit(types.SET_GROUP_LIST, _getDiskGroupList())
+    commit(types.SET_USER_LIST, _getUserList())
     store.dispatch('updateEmailList')
   })
 }

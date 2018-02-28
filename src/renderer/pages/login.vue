@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync='visible' title='添加账号' :before-close='close' top='30vh'>
-      <div class="help">帮助</div>
+      <div title='若不知道密码，需要先在邮箱：设置->账户->开启IMAP/STMP服务获取授权码，授权码即为客户端登录密码' class="help">帮助</div>
       <br>
       <el-form :model="ruleForm" label-width="80px" status-icon :rules="rules" size='small' ref="ruleForm">
         <el-form-item prop="email" label="email" >
