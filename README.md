@@ -1,6 +1,7 @@
 # 关于项目
 
 这是我的毕业设计(2018)，邮件客户端
+
 目前尚未完成，会继续修改
 
 ## 使用的相关模块
@@ -8,7 +9,7 @@
 * 用electron-vue构建项目
 * 用node-imap模块接收邮件
 * 用nodemailer发送邮件
-* 用element-ui做样式框架
+* 用element-ui组件库
 * 用lowdb做本地数据存储
 * 用iconv-lite、quoted-printable、utf8等处理编码
 * 用vue-quill-editor做富文本编辑器

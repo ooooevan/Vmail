@@ -15,7 +15,7 @@ export function getPersonalPath (email) {
 }
 
 export function getEmailDetailPath (email, id) {
-  return path.join(userData, Buffer.from(email).toString('base64'), id)
+  return path.join(userData, Buffer.from(email).toString('base64'), `${id}`)
 }
 
 export function getPersonalDirPath (email) {

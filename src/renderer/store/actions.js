@@ -37,7 +37,7 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert(JSON.stringify(err))
+    alert('获取收件箱错误：' + JSON.stringify(err))
   })
   _getEmailList(user, 'sent').then(res => {
     res.forEach(item => {
@@ -58,7 +58,7 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert(JSON.stringify(err))
+    alert('获取发件箱错误：' + JSON.stringify(err))
   })
   _getEmailList(user, 'draft').then(res => {
     res.forEach(item => {
@@ -79,7 +79,7 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert(JSON.stringify(err))
+    alert('获取草稿箱错误：' + JSON.stringify(err))
   })
 }
 
@@ -179,7 +179,7 @@ export function testAccount ({commit, state}, user) {
       const url = `http://config.mail.163.com/settings/imap/index.jsp?uid=${user.email}`
       shell.openExternal(url)
     } else {
-      alert('登录失败:' + eee.message)
+      alert('登录失败')
     }
     store.dispatch('hideLogin')
   })

@@ -106,9 +106,6 @@ export function _getEmailList (user, _box = 'inbox', start) {
 export function _getEmailDetail (user, id, _box) {
   let box
   switch (_box) {
-    case 'in':
-      box = 'INBOX'
-      break
     case 'inbox':
       box = 'INBOX'
       break

@@ -1,6 +1,6 @@
 <template>
   <div class='inbox'>
-    <letter-table type='in' :data="inboxMail" @changeRouter='changeRouter'></letter-table>
+    <letter-table type='inbox' :data="inboxMail" @changeRouter='changeRouter'></letter-table>
   </div>
 </template>
 <script>

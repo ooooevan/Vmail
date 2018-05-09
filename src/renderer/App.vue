@@ -32,7 +32,7 @@
       }
       setInterval(() => {
         this.updateEmailList()
-      }, 60 * 1000)
+      }, 20 * 1000)
     },
     watch: {
       isShowLogin (newShow) {
