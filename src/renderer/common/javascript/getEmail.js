@@ -36,8 +36,8 @@ export function _getEmailList (user, _box = 'inbox', start) {
     }
     imap.once('error', function (err) {
       imap.end()
-      if (err.code === 'ENOTFOUND' || err.source === 'timeout') {
-        // 无网络
+      if (err.code === 'ENOTFOUND' || err.source === 'timeout' || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
+        // 无网络或网络有问题
         resolve([])
       } else {
         reject(err)
@@ -132,8 +132,8 @@ export function _getEmailDetail (user, id, _box) {
     }
     imap.once('error', function (err) {
       imap.end()
-      if (err.code === 'ENOTFOUND' || err.source === 'timeout') {
-        // 无网络
+      if (err.code === 'ENOTFOUND' || err.source === 'timeout' || err.code === 'ECONNRESET' || err.code === 'ETIMEDOUT') {
+        // 无网络或网络有问题
         resolve([])
       } else {
         reject(err)

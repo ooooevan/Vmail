@@ -25,7 +25,7 @@
           @click="select(item)"
           v-for='item in currentData'
           :class='item.isRead ? "" : "notRead"'>
-          <th style="letter-spacing: -1px">{{cutstr(item.from.join(';'))}}</th>
+          <th style="letter-spacing: -1px">{{cutstr(type == 'inbox' ? item.from.join(';') : item.to.join(';'))}}</th>
           <th style="letter-spacing: -1px">{{item.subject}}</th>
           <th>{{item.date}}</th>
           <th @click.stop="star(item)"><i :class='item.isStar ? "el-icon-star-on": "el-icon-star-off"'></i></th>

@@ -2,7 +2,7 @@
   <div id="app" style="height: 100%">
     <slide></slide>
     <div id="content">
-      <v-header></v-header>
+      <v-header :isOffline='isOffline'></v-header>
       <router-view></router-view>
       <login @close='close' @loginClose='loginClose' :visible='loginVisible' v-if='loginVisible'></login>
     </div>
@@ -23,26 +23,36 @@
     },
     data () {
       return {
-        loginVisible: true
+        loginVisible: true,
+        timer: null
       }
     },
     created () {
       if (this.user.email) {
         this.loginVisible = false
       }
-      setInterval(() => {
+      this.updateEmailList()
+      this.timer = setInterval(() => {
         this.updateEmailList()
-      }, 20 * 1000)
+      }, 30 * 1000)
     },
     watch: {
       isShowLogin (newShow) {
         if (newShow) {
           this.loginVisible = true
         }
+      },
+      isOffline (newState) {
+        clearInterval(this.timer)
+        if (!newState) {
+          this.timer = setInterval(() => {
+            this.updateEmailList()
+          }, 30 * 1000)
+        }
       }
     },
     computed: {
-      ...mapGetters(['user', 'isShowLogin'])
+      ...mapGetters(['user', 'isShowLogin', 'isOffline'])
     },
     methods: {
       loginClose () {

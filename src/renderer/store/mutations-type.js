@@ -27,3 +27,5 @@ export const MARK_INBOX_EMAIL = 'MARK_INBOX_EMAIL'
 export const SET_USER_LIST = 'SET_USER_LIST'
 
 export const SET_UNLOAD_LIST = 'SET_UNLOAD_LIST'
+
+export const SET_IS_OFFLINE = 'SET_IS_OFFLINE'

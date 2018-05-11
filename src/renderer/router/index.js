@@ -10,7 +10,6 @@ import mailDetails from '@/pages/mail-details'
 import addressList from '@/pages/address-list'
 
 import notfind from '@/pages/notfind'
-// import LandingPage from '@/pages/LandingPage'
 Vue.use(Router)
 
 export default new Router({

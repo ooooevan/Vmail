@@ -12,7 +12,8 @@ const state = {
   sendingStatus: {sending: false, err: null},
   emailDetail: {},
   isShowLogin: false,
-  unLoadList: []
+  unLoadList: [],
+  isOffline: false
 }
 
 export default state

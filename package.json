@@ -1,8 +1,8 @@
 {
   "name": "vmail",
-  "version": "0.0.0",
+  "version": "0.9.0",
   "author": "ooooevan <635638508@qq.com>",
-  "description": "An electron-vue project",
+  "description": "An email client",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
@@ -20,10 +20,16 @@
   },
   "build": {
     "productName": "vmail",
-    "appId": "org.simulatedgreg.electron-vue",
+    "appId": "org.simulatedgreg.vmail",
     "directories": {
       "output": "build"
     },
+    "publish": [
+      {
+        "provider": "generic",
+        "url": "http://localhost:9080/build"
+      }
+    ],
     "files": [
       "dist/electron/**/*"
     ],
@@ -53,6 +59,7 @@
     }
   },
   "dependencies": {
+    "electron-updater": "^2.21.10",
     "element-ui": "^2.2.0",
     "iconv-lite": "^0.4.19",
     "imap": "^0.8.19",

@@ -18,6 +18,7 @@ export function updateEmailList ({commit, state}) {
     return false
   }
   _getEmailList(user, 'inbox', inboxResult[0] && inboxResult[0].id).then(res => {
+    store.dispatch('isOffline', false)
     res.forEach(item => {
       let add = true
       state.inboxMail.forEach(email => {
@@ -37,9 +38,14 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert('获取收件箱错误：' + JSON.stringify(err))
+    if (done === 0) {
+      store.dispatch('isOffline', true)
+    } else {
+      alert('获取收件箱错误：' + JSON.stringify(err))
+    }
   })
   _getEmailList(user, 'sent').then(res => {
+    store.dispatch('isOffline', false)
     res.forEach(item => {
       let add = true
       state.sentMail.forEach(email => {
@@ -58,9 +64,14 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert('获取发件箱错误：' + JSON.stringify(err))
+    if (done === 0) {
+      store.dispatch('isOffline', true)
+    } else {
+      alert('获取发件箱错误：' + JSON.stringify(err))
+    }
   })
   _getEmailList(user, 'draft').then(res => {
+    store.dispatch('isOffline', false)
     res.forEach(item => {
       let add = true
       state.draftMail.forEach(email => {
@@ -79,7 +90,11 @@ export function updateEmailList ({commit, state}) {
       commit(types.SET_UPDATING, false)
     }
   }).catch(err => {
-    alert('获取草稿箱错误：' + JSON.stringify(err))
+    if (done === 0) {
+      store.dispatch('isOffline', true)
+    } else {
+      alert('获取草稿箱错误：' + JSON.stringify(err))
+    }
   })
 }
 
@@ -90,8 +105,8 @@ export function getEmailDetail ({commit, state}, {id, type}) {
   } else {
     const user = state.user
     _getEmailDetail(user, id, type).then(res => {
-      if (!res.body.bodyHtml && !res.header.to) {
-        alert('该邮件已过期，无法获取')
+      if (!res.body || (!res.body.bodyHtml && !res.header.to)) {
+        alert('该邮件太久远，无法获取')
         window.history.back()
       } else {
         commit(types.SET_EMAIL_DETAIL, _saveDiskEmail(res))
@@ -183,6 +198,10 @@ export function testAccount ({commit, state}, user) {
     }
     store.dispatch('hideLogin')
   })
+}
+
+export function isOffline ({commit, state}, boolean) {
+  commit(types.SET_IS_OFFLINE, boolean)
 }
 
 export function showLogin ({commit, state}) {

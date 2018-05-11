@@ -25,14 +25,19 @@ export function matchBody (emailText, emailHeader) {
     let htmlArr = emailText.split(blankLineReg)
     htmlArr.shift()
     const Html = htmlArr.join('')
-    const transferEncoding = emailHeader['content-transfer-encoding'].join('')
+    const transferEncoding = emailHeader['content-transfer-encoding'] && emailHeader['content-transfer-encoding'].join('')
     if (transferEncoding === 'base64') {
       const buff = Buffer.from(Html, transferEncoding)
       result.bodyHtml = iconv.decode(buff, charset || 'utf-8')
     } else {
-      // 编码为quoted-printable且charset为utf8。暂时遇到为utf8的,未看到其他字符集
-      const quotedHtml = utf8.decode(quotedPrintable.decode(Html))
-      result.bodyHtml = quotedHtml
+      try {
+        // 编码为quoted-printable且charset为utf8。其他字符集用quotedPrintable会报错，进入catch
+        const quotedHtml = utf8.decode(quotedPrintable.decode(Html))
+        result.bodyHtml = quotedHtml
+      } catch (e) {
+        // 不是quoted-printable，那html应该是utf-8编码而不是gb18030
+        result.bodyHtml = iconv.decode(iconv.encode(Html, 'gb18030'), 'utf-8')
+      }
     }
   } else if (contentType.match(multipartType)) {
     // ② 是multipart类型
@@ -46,7 +51,7 @@ export function matchBody (emailText, emailHeader) {
     // 又发现，值为multipart/related;type="multipart/alternative";boundary="----=_NextPart_5A6951CD_6F185580_3879981A" 会当做alternativeMultipart，但不应该进入这里
     // 基于上一个情况，alternativeMultipart和relatedMultipart只能出现一个，否则去else if
     if ((contentType.match(alternativeMultipart) && !contentType.match(relatedMultipart)) || (contentType.match(relatedMultipart) && textArr.length <= 2)) {
-      // ② - 1 - 2, multipart/alternative类型
+      // ② - 1, multipart/alternative类型
       // 第一个是邮件头，所以忽略第一个
       textArr.forEach((text, index) => {
         if (index === 0) {
@@ -79,13 +84,19 @@ export function matchBody (emailText, emailHeader) {
             const buff = Buffer.from(contentText, transferEncoding)
             result.bodyText += iconv.decode(buff, charset || 'utf-8')
           } else {
-            // 编码为quoted-printable且charset为utf8。暂时遇到为utf8的,未看到其他字符集
-            const quotedText = utf8.decode(quotedPrintable.decode(contentText))
-            result.bodyText += quotedText
+            try {
+              // 编码为quoted-printable且charset为utf8。其他字符集用quotedPrintable会报错，进入catch
+              const quotedText = utf8.decode(quotedPrintable.decode(contentText))
+              result.bodyText += quotedText
+            } catch (e) {
+              // 不是quoted-printable，那html本身应该是utf-8编码而不是gb18030
+              result.bodyText += iconv.decode(iconv.encode(contentText, 'gb18030'), 'utf-8')
+            }
           }
         }
       })
     } else if (contentType.match(mixedMultipart) || (contentType.match(relatedMultipart) && textArr.length > 2)) {
+      // ② - 2, multipart/related类型
       // ② - 3, multipart/mixed类型
       // arr里面可以包含N(>=0)个附件类型和一个其他类型的'小邮件',根据contentType以区分
       textArr.forEach((text, index) => {
@@ -158,9 +169,14 @@ export function matchBody (emailText, emailHeader) {
             const buff = Buffer.from(Html, transferEncoding)
             result.bodyHtml = iconv.decode(buff, charset || 'utf-8')
           } else {
-            // 编码为quoted-printable且charset为utf8。暂时遇到为utf8的,未看到其他字符集
-            const quotedHtml = utf8.decode(quotedPrintable.decode(Html))
-            result.bodyHtml = quotedHtml
+            try {
+              // 编码为quoted-printable且charset为utf8。暂时遇到为utf8的,未看到其他字符集
+              const quotedHtml = utf8.decode(quotedPrintable.decode(Html))
+              result.bodyHtml = quotedHtml
+            } catch (e) {
+              // 不是quoted-printable，那html本身应该是utf-8编码而不是gb18030
+              result.bodyHtml = iconv.decode(iconv.encode(Html, 'gb18030'), 'utf-8')
+            }
           }
         } else {
           // 3 - 2, mixed中的文件,包含附件和正文资源

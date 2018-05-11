@@ -22,3 +22,5 @@ export const groupList = state => state.groupList
 export const isShowLogin = state => state.isShowLogin
 
 export const userList = state => state.userList
+
+export const isOffline = state => state.isOffline

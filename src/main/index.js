@@ -4,11 +4,7 @@ import Config from '../models/config'
 const low = require('lowdb')
 const FileSync = require('lowdb/adapters/FileSync')
 const path = require('path')
-// const adapter = new FileSync('')
-// const db = low(adapter)
-// console.log(db)
-// import path from 'path'
-// import fs from 'fs'
+
 /**
  * Set `__static` path to static files in production
  * https://simulatedgreg.gitbooks.io/electron-vue/content/en/using-static-assets.html
@@ -16,11 +12,6 @@ const path = require('path')
 if (process.env.NODE_ENV !== 'development') {
   global.__static = path.join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
-// 用户数据存储位置
-// const userPath = app.getPath('userData')
-// const userFile = path.join(userPath, 'config.json')
-// console.log(fs.writeFileSync(userFile, '{aa:"aaa"}'))
-// console.log(fs.readFileSync(userFile).toString())
 
 // console.log(`home   ${app.getPath('home')}`) // 获取用户根目录
 // console.log(`userData   ${app.getPath('userData')}`) // 用于存储 app 用户数据目录
@@ -76,11 +67,9 @@ app.on('activate', () => {
 
 /*
 import { autoUpdater } from 'electron-updater'
-
 autoUpdater.on('update-downloaded', () => {
   autoUpdater.quitAndInstall()
 })
-
 app.on('ready', () => {
   if (process.env.NODE_ENV === 'production') autoUpdater.checkForUpdates()
 })

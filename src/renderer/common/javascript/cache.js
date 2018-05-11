@@ -122,7 +122,7 @@ export function _saveDiskEmail (detail) {
       }
     }
   }
-  // 添加：将html也单独为一个文件，用iframe独立
+  // 添加：将html也单独为一个文件
   if (!contentType.match(htmlTypeReg)) {
     const html = _detail.body.bodyHtml
     if (html && html.length > 100 && (html.match(/<style/) || html.length > 1000)) {

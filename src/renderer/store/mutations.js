@@ -86,6 +86,9 @@ const mutations = {
   },
   [types.SET_UNLOAD_LIST] (state, list) {
     state.unLoadList = list
+  },
+  [types.SET_IS_OFFLINE] (state, boolean) {
+    state.isOffline = boolean
   }
 }
 export default mutations
