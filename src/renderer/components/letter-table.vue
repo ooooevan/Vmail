@@ -4,7 +4,7 @@
       <div class="total fl">
         共{{data.length}}封邮件
       </div>
-      <el-button class="markReaded fl" @click='handleMarkReaded' v-if='type === "in"' size="small">全部标为已读</el-button>
+      <el-button class="markReaded fl" @click='handleMarkReaded' v-if='type === "inbox"' size="small">全部标为已读</el-button>
       <div class="page fr">
         <span>{{currentPage}} / {{totalPage}}页&nbsp;</span>
         <el-button @click='prev' v-if='data.length > perPage && currentPage > 1' size="mini">上一页</el-button>
@@ -14,7 +14,7 @@
     <table>
       <thead>
         <tr>
-          <th width="22%">{{type === 'in' ? '发件人' : '收件人'}}</th>
+          <th width="22%">{{type === 'inbox' ? '发件人' : '收件人'}}</th>
           <th width="59%">主题</th>
           <th width="19%">日期</th>
         </tr>

@@ -1,6 +1,6 @@
 import * as types from './mutations-type'
 import store from './index'
-import { _saveEmailList, _saveSentEmailList, _saveDiskEmail, _saveUser, _getDiskEmail, _getDiskMailList, _getDiskAdressList, _getDiskGroupList, _saveGroupList, _saveAddressList, _saveDraftsEmailList, _getUserList } from '@/common/javascript/cache'
+import { _saveEmailList, _saveSentEmailList, _saveDiskEmail, _saveUser, _deleteUser, _getDiskEmail, _getDiskMailList, _getDiskAdressList, _getDiskGroupList, _saveGroupList, _saveAddressList, _saveDraftsEmailList, _getUserList } from '@/common/javascript/cache'
 import { _getEmailList, _getEmailDetail, _testAccount } from '@/common/javascript/getEmail'
 import { _sendEmail } from '@/common/javascript/sendEmail'
 import Friends from '@src/models/address_list'
@@ -40,6 +40,7 @@ export function updateEmailList ({commit, state}) {
   }).catch(err => {
     if (done === 0) {
       store.dispatch('isOffline', true)
+      commit(types.SET_UPDATING, false)
     } else {
       alert('获取收件箱错误：' + JSON.stringify(err))
     }
@@ -66,6 +67,7 @@ export function updateEmailList ({commit, state}) {
   }).catch(err => {
     if (done === 0) {
       store.dispatch('isOffline', true)
+      commit(types.SET_UPDATING, false)
     } else {
       alert('获取发件箱错误：' + JSON.stringify(err))
     }
@@ -92,6 +94,7 @@ export function updateEmailList ({commit, state}) {
   }).catch(err => {
     if (done === 0) {
       store.dispatch('isOffline', true)
+      commit(types.SET_UPDATING, false)
     } else {
       alert('获取草稿箱错误：' + JSON.stringify(err))
     }
@@ -222,6 +225,13 @@ export function changeUser ({commit, state}, user) {
     commit(types.SET_GROUP_LIST, _getDiskGroupList())
     commit(types.SET_USER_LIST, _getUserList())
     store.dispatch('updateEmailList')
+  })
+}
+
+export function logOut ({commit, state}, user) {
+  _deleteUser(state.user).then(() => {
+    let userList = _getUserList()
+    store.dispatch('changeUser', userList[0])
   })
 }
 

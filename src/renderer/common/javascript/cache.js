@@ -180,3 +180,13 @@ export function _saveUser (user) {
     })
   })
 }
+
+export function _deleteUser (user) {
+  return new Promise((resolve, reject) => {
+    const config = low(new FileSync(PATH.config))
+    let userList = config.get('userList').write()
+    userList = userList.filter(item => (item.email !== user.email))
+    config.set('userList', userList).write()
+    resolve()
+  })
+}
