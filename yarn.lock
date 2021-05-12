@@ -5599,9 +5599,9 @@ node-pre-gyp@^0.6.39:
     tar "^2.2.1"
     tar-pack "^3.4.0"
 
-nodemailer@^4.6.0:
-  version "4.6.0"
-  resolved "http://registry.npm.taobao.org/nodemailer/download/nodemailer-4.6.0.tgz#b99391435aabbd34b74a1283112fbdfd34f7eb8f"
+nodemailer@^6.4.16:
+  version "6.4.16"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.4.16.tgz#5cb6391b1d79ab7eff32d6f9f48366b5a7117293"
 
 nopt@^4.0.1:
   version "4.0.1"
