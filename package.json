@@ -64,7 +64,7 @@
     "iconv-lite": "^0.4.19",
     "imap": "^0.8.19",
     "lowdb": "^1.0.0",
-    "moment": "^2.20.1",
+    "moment": "^2.29.2",
     "nodemailer": "^4.6.0",
     "quoted-printable": "^1.0.1",
     "utf8": "^3.0.0",
